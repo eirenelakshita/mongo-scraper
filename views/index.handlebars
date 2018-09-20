@@ -1,1 +1,8 @@
-<h1>Freakonomics On</h1>
+<a class="btn btn-primary" id="list-button">
+    Scrape Episodes List</a>
+
+{{#each article}}
+<p data-id="{{this._id}}"><b>{{this.title}}</b><br />
+<i>Summary: {{this.summary}}</i></p>
+<button class="btn-success" id="save-button">Save</button>
+{{/each}}
