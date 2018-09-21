@@ -86,7 +86,6 @@ $(document).on("click", "#save-button", function (event) {
 
 // When you click the savenote button
 $(document).on("click", "#save-note", function (e) {
-  e.preventDefault();
   // Grab the id associated with the article from the submit button
   var thisId = $(this).attr("data-id");
   console.log(thisId);
@@ -126,4 +125,41 @@ $(document).on("click", "#delete-article", function (e) {
     })
 
     // $(".modal-body")
+});
+
+$(document).on("click", "#modalButton", function (e) {
+  var thisId = $(this).attr("data-id");
+  console.log(thisId);
+  $(".modal-title").empty();
+  $(".modal-notes").empty();
+  $.ajax({
+    method: "GET",
+    url: "/articles/" + thisId
+  })
+  .then(function(data) {
+    console.log(data);
+    console.log(data.note);
+    $(".modal-title").prepend("<h2>" + data.title + "<h2>");
+    $("#save-note").attr("data-id", thisId);
+
+    if (!data.note.length == 0) {
+      for(var i = 0; i<data.note.length; i++){
+          $(".modal-notes").append("<p class='border border-dark' id='comment'>"+data.note[i].body+"<button data-dismiss='modal' data-id='"+data.note[i]._id+"'type='button' class='btn btn-danger deleteBtn'>X</button></p>");
+      }}
+  })
+});
+
+
+$(document).on("click", ".deleteBtn", function (e) {
+  var noteId = $(this).attr("data-id");
+  var articleId = $("#save-note").attr("data-id");
+  console.log("Note id: " + noteId);
+  console.log("Article id: " + articleId);
+  $.ajax({
+    method: "DELETE",
+    url: "/articles/" + noteId,
+    data: {
+      articleId: articleId
+    }
+  }).then(console.log("Delete success"));
 });

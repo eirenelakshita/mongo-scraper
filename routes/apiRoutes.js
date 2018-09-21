@@ -97,7 +97,7 @@ module.exports = function (app) {
     // Route for grabbing a specific Article by id, populate it with it's note
     app.get("/articles/:id", function (req, res) {
         // Using the id passed in the id parameter, prepare a query that finds the matching one in our db...
-        console.log(req);
+        console.log("Getting article");
         db.Article.findOne({ _id: req.params.id })
             // ..and populate all of the notes associated with it
             .populate("note")
@@ -112,35 +112,49 @@ module.exports = function (app) {
 
     });
 
-    // Route to get all User's and populate them with their notes
-    app.get("/api/articles/:id", function (req, res) {
-        db.Article.findOne({ _id: req.params.id })
-            // ..and populate all of the notes associated with it
-            .populate("notes")
-            .then(function (data) {
-                var hbsObject = {
-                    note: data.note
-                }
-                console.log(hbsObject.note._id);
-                res.render("saved", hbsObject);
-            })
-            .catch(function (err) {
-                // If an error occurred, send it to the client
-                res.json(err);
-            });
-        res.redirect("/saved");
-    });
+    // // Route to get all User's and populate them with their notes
+    // app.get("/api/articles/:id", function (req, res) {
+    //     db.Article.findOne({ _id: req.params.id })
+    //         // ..and populate all of the notes associated with it
+    //         .populate("note")
+    //         .then(function (data) {
+    //             var hbsObject = {
+    //                 note: data.note
+    //             }
+    //             console.log(hbsObject.note._id);
+    //             res.render("saved", hbsObject);
+    //         })
+    //         .catch(function (err) {
+    //             // If an error occurred, send it to the client
+    //             res.json(err);
+    //         });
+    //     res.redirect("/saved");
+    // });
 
     app.put("/remove/articles/:id", function (req, res) {
         db.Article.findOneAndUpdate({ _id: req.params.id }, { $set: { "saved": false } })
         .then(function (dbArticle) {
             // If we were able to successfully find an Article with the given id, send it back to the client
+            console.log("Article removed from saved");
             res.redirect("/saved");
         })
         .catch(function (err) {
             // If an error occurred, send it to the client
             res.json(err);
         });
+    });
+
+    app.delete("/articles/:id", function(req, res) {
+        var articleId = req.body.articleId;
+        db.Note.deleteOne({_id: req.params.id})
+        // .then(function(result) {
+        //     return db.Article.findByIdAndRemove({ _id: articleId})
+        // })
+        .then(function(del) {
+            res.json(del);
+        }).catch(function(err) {
+            res.json(err)
+        })
     })
 };
 
