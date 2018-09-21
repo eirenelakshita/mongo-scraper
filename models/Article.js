@@ -14,7 +14,8 @@ var ArticleSchema = new Schema({
   // `link` is required and of type String
   summary: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
   saved: {
     type: Boolean,

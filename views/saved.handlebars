@@ -1,0 +1,42 @@
+{{#each article}}
+<p data-id="{{this._id}}"><b>{{this.title}}</b><br />
+<i>Summary: {{this.summary}}</i></p>
+
+<!-- Trigger the modal with a button -->
+<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Add Note</button>
+
+<!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Article {{this._id}} Note</h4>
+      </div>
+      <div class="modal-body">
+          {{#each note}}
+          <p data-id="{{this._id}}"><b>Note {{this._id}}</b></p>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          {{/each}}
+
+
+<form>
+  <div class="form-group">
+    <label for="inputNote"></label>
+    <textarea class="form-control" id="inputNote" rows="3"></textarea>
+  </div>
+  <button type="submit" class="btn btn-primary" id="save-note" data-id="{{this._id}}">Save Note</button>
+</form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<button class="btn-success" id="delete-article" data-id="{{this._id}}">Delete Article from Saved</button>
+{{/each}}

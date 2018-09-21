@@ -23,21 +23,27 @@
 //     });
 // })
 
-$("#save-button").on("click", function(event) {
-  var id = $(this).data("id");
-  var newStatus = $(this).data("newstatus");
-
-  var newStatusState = {
-    saved: newStatus
-  };
-
-  // Send the PUT request.
-  $.ajax("/api/cats/" + id, {
-    type: "PUT",
-    data: newStatusState
+$("#saved-button").on("click", function (event) {
+  $.ajax("/scraped", {
+    type: "GET"
   }).then(
-    function() {
-      console.log("changed saved status to", newStatus);
+    function () {
+      console.log("changed saved status of " + id);
+      // Reload the page to get the updated list
+      location.reload();
+    }
+  );
+});
+
+$(document).on("click", "#save-button", function (event) {
+  var id = $(this).data("id");
+  console.log("Save button clicked: " + id);
+  // Send the PUT request.
+  $.ajax("/articles/" + id, {
+    type: "PUT"
+  }).then(
+    function () {
+      console.log("changed saved status of " + id);
       // Reload the page to get the updated list
       location.reload();
     }
@@ -78,31 +84,46 @@ $("#save-button").on("click", function(event) {
 //     });
 // });
 
-// // When you click the savenote button
-// $(document).on("click", "#savenote", function() {
-//   // Grab the id associated with the article from the submit button
-//   var thisId = $(this).attr("data-id");
+// When you click the savenote button
+$(document).on("click", "#save-note", function (e) {
+  e.preventDefault();
+  // Grab the id associated with the article from the submit button
+  var thisId = $(this).attr("data-id");
+  console.log(thisId);
+  // Run a POST request to change the note, using what's entered in the inputs
+  $.ajax({
+    method: "POST",
+    url: "/articles/" + thisId,
+    data: {
+      // Value taken from note textarea
+      body: $("#inputNote").val()
+    }
+  })
+    // With that done
+    .then(function (data) {
+      // Log the response
+      console.log(data);
+      // Empty the notes section
+      $("#inputNote").val("");
+      $(".modal-body").empty();
+    });
+    // $(".modal-body")
+});
 
-//   // Run a POST request to change the note, using what's entered in the inputs
-//   $.ajax({
-//     method: "POST",
-//     url: "/articles/" + thisId,
-//     data: {
-//       // Value taken from title input
-//       title: $("#titleinput").val(),
-//       // Value taken from note textarea
-//       body: $("#bodyinput").val()
-//     }
-//   })
-//     // With that done
-//     .then(function(data) {
-//       // Log the response
-//       console.log(data);
-//       // Empty the notes section
-//       $("#notes").empty();
-//     });
+$(document).on("click", "#delete-article", function (e) {
+  e.preventDefault();
+  // Grab the id associated with the article from the submit button
+  var thisId = $(this).attr("data-id");
+  console.log(thisId);
+  // Run a POST request to change the note, using what's entered in the inputs
+  $.ajax({
+    method: "PUT",
+    url: "/remove/articles/" + thisId
+  })
+    .then(function () {
+      console.log("Deleted from Saved, article id " + id);
+      location.reload();
+    })
 
-//   // Also, remove the values entered in the input and textarea for note entry
-//   $("#titleinput").val("");
-//   $("#bodyinput").val("");
-// });
+    // $(".modal-body")
+});

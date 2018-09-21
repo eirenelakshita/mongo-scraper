@@ -1,8 +1,8 @@
-<a class="btn btn-primary" id="list-button">
+<a class="btn btn-primary" id="list-button" href="/scrape">
     Scrape Episodes List</a>
 
 {{#each article}}
-<p data-id="{{this._id}}"><b>{{this.title}}</b><br />
+<p><b>{{this.title}}</b><br />
 <i>Summary: {{this.summary}}</i></p>
-<button class="btn-success" id="save-button">Save</button>
+<button data-id="{{this._id}}" class="btn-success" id="save-button">Save</button>
 {{/each}}
